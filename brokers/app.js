@@ -6,19 +6,14 @@ module.exports.order=order
 
 
 
-async function order(requestOrders,bot,tradeInKite=true,tradeInFp=true){
-    let hedgeStatus = await kiteOrder.getHedgingStatus()
+async function order(requestOrders,bot,expiry,tradeInKite=true,tradeInFp=true){
     let requestOrdersBuy=requestOrders.filter(leg=>leg.type==="BUY")
     let requestOrdersSell=requestOrders.filter(leg=>leg.type==="SELL")
-    if(!hedgeStatus){
-        requestOrdersBuy.filter(leg=>leg.isHedge!=true)
-        requestOrdersSell.filter(leg=>leg.isHedge!=true)
-    }
     const requestDataBuy={
-        orders:requestOrdersBuy,expiry:process.env.NEXT_EXPIRY
+        orders:requestOrdersBuy,expiry
     }
     const requestDataSell={
-        orders:requestOrdersSell,expiry:process.env.NEXT_EXPIRY
+        orders:requestOrdersSell,expiry
     }
     let user={id:process.env.MY_TELEGRAM_ID}
     if(process.env.PLACE_ORDER_5PAISA.trim()==="true"&&tradeInFp){

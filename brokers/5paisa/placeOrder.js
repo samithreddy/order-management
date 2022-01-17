@@ -3,7 +3,6 @@ const fp = require("./app")
 let isFailing=false;
 module.exports={
     order:async (request)=>{
-
         if(isFailing){
             throw "Orders have failed previously hence the no order is being placed. Please fix the issue and restart the app."
         }
@@ -19,7 +18,6 @@ module.exports={
             isFailing=true
             throw errors
         }
-        
     },
     getQty:async()=>{
             return process.env.FIVEPAISA_ORDER_QTY

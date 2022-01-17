@@ -8,13 +8,6 @@ let callback=console.log
 module.exports={
     init:async(user,requestToken)=>{
         operations.isInit=false
-        // if(process.env.NEXT_EXPIRY===process.env.MONTHLY_EXPIRY){
-        //     kiteExpiryPrefix = process.env.NEXT_EXPIRY.match("..-(...)-..(..)").slice(1,4).reverse().join("").toUpperCase()
-        // }
-        // else{
-        //     let prefix = process.env.NEXT_EXPIRY.match("(..)-(.)..-..(..)").slice(1,4).reverse().join("").toUpperCase()
-        //     kiteExpiryPrefix = prefix.substring(0, 2)+(parseInt(new Date(process.env.NEXT_EXPIRY).getMonth())+1).toString()+prefix.substring(3)
-        // }
         kc = new KiteConnect({
             "api_key": process.env.KITE_API_KEY,
             "debug": false
@@ -50,6 +43,8 @@ module.exports={
         operations.orderMargins=orderMargins
         operations.basketMargins=basketMargins
         operations.isInit=true
+
+        console.log("Kite Logged in")
         return operations
 
 

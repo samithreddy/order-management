@@ -39,12 +39,6 @@ function formatDate(date) {
 }
 
 
- 
-
-
-
-
-
 async function init(){
         loginCred = await client.login(...creds)
         await client.init(loginCred)
@@ -95,7 +89,6 @@ async function placeOrder(orders,expiry){
 async function getQty(){
         return process.env.FIVEPAISA_ORDER_QTY
 }
-
 
 
 
