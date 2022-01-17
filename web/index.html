@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Options Algo Trading Bot</title>
+    <style>
+:root {
+  --v-size: 22em; }
+  @media only screen and (min-width: 1025px) {
+    :root {
+      --v-size: 28em; } }
+
+button {
+  cursor: pointer; }
+
+* {
+  margin: 0;
+  padding: 0;
+  color: #1B1D27;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+}
+
+image {
+  width: 100%; }
+
+b {
+  font-weight: 400; }
+
+span {
+  font-weight: 400; }
+
+.pay-iframe {
+  border: 0;
+  min-height: 40em;
+  min-width: 25em; }
+
+p {
+  font-size: inherit;
+  padding: 0.1em; }
+
+.muted {
+  background-color: #ffc10714;
+  border-radius: 0px; }
+
+input, button, select {
+  font-size: inherit;
+  padding: 0.5em;
+  margin: 0.5em 0.2em;
+  min-height: 1.4em;
+  border-radius: 0.25em;
+  border: 1px solid #d0d0d0;
+  min-width: 3em; }
+
+.dark-empty {
+  border: 2px solid #1B1D27;
+  background-color: #FFFFFF;
+  color: #1B1D27; }
+
+.dark-fill {
+  border: 2px solid #1B1D27;
+  background-color: #1B1D27;
+  color: #FFFFFF; }
+
+.primary {
+  border: 1px solid #1f01b9;
+  background-color: #1f01b9;
+  color: #FFFFFF; }
+
+.secondary {
+  border: 1px solid #1f01b9;
+  background-color: #FFFFFF;
+  color: #1B1D27; }
+
+.tertiary {
+  border: 1px solid #E33033;
+  background-color: #FFFFFF;
+  color: #1B1D27; }
+
+.image-button {
+  border: 0px;
+  background-color: #FFFFFF;
+  width: 20px; }
+  .image-button img {
+    width: 100%; }
+
+.inline {
+  display: inline-block;
+  padding-left: 2px; }
+
+.tooltip {
+  position: relative;
+  display: inline-block; }
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    background-color: #1B1D27;
+    color: #FFFFFF;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    margin: 0 0 0 0em;
+    font-size: 12px;
+    top: -2em; }
+
+#footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background-color: #FFFFFF;
+  border-radius: 2em 2em 0em 0em;
+  width: 100%;
+  padding-top: 1em;
+  font-size: 14px;
+  padding-right: 3em;
+  padding-bottom: 2em; }
+  @media only screen and (min-width: 1025px) {
+    #footer {
+      padding-left: 3em; } }
+  #footer .footer-elements {
+    float: left;
+    width: auto;
+    padding-left: 5em;
+    text-align: center;
+    border-right: 1px solid #1B1D27;
+    padding-right: 0.5em;
+    padding-left: 0.5em; }
+    @media only screen and (min-width: 1025px) {
+      #footer .footer-elements {
+        padding-right: 1em;
+        padding-left: 1em; } }
+    #footer .footer-elements a {
+      text-decoration: none; }
+      #footer .footer-elements a div {
+        display: inline-block;
+        width: 17px; }
+        #footer .footer-elements a div img {
+          width: 100%; }
+    #footer .footer-elements p {
+      display: inline-block; }
+  #footer .footer-elements:last-child {
+    border: 0; }
+  #footer .footer-elements:first-child {
+    display: none; }
+    @media only screen and (min-width: 1025px) {
+      #footer .footer-elements:first-child {
+        display: inline-block; } }
+    #footer .footer-elements:first-child p {
+      font-weight: 700; }
+
+.tooltip:hover .tooltiptext {
+  visibility: visible; }
+
+.success {
+  border: 1px solid #34C697;
+  background-color: #FFFFFF;
+  color: #1B1D27; }
+
+.warning {
+  border: 1px solid #EF9090;
+  background-color: #FFFFFF;
+  color: #1B1D27; }
+
+.mobile-hide {
+  display: none; }
+  @media only screen and (min-width: 1025px) {
+    .mobile-hide {
+      display: revert; } }
+
+.table, table, td, tr, thead, tbody {
+  border-radius: 0.5em; }
+
+.error {
+  color: #EF9090; }
+
+.logo img {
+  width: 100%; }
+
+.sell {
+  color: #E33033 !important; }
+
+.buy {
+  color: #1f01b9 !important; }
+
+.profit {
+  color: #34C697; }
+
+.loss {
+  color: #E33033; }
+
+canvas {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 6px;
+  border-radius: 0.5em;
+  padding: 0.1em; }
+
+.table table {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 6px;
+  border-collapse: collapse;
+  text-align: center;
+  vertical-align: middle; }
+
+.table th, .table td {
+  padding: 0px,4px; }
+
+.table tbody tr:nth-child(odd) {
+  background-color: #FFFFFF; }
+
+.table tbody tr:nth-child(even) {
+  background-color: #f9f9f9; }
+
+.table tbody tr:last-child {
+  background-color: #FFFFFF; }
+
+.table thead th {
+  height: 5em;
+  line-height: 1em;
+  background-color: #F8F8FA;
+  font-weight: 500; }
+
+.body {
+  position: absolute;
+  padding-left: 0.1em;
+  padding-right: 0.1em;
+  padding-top: 1.5em; }
+  @media only screen and (min-width: 750px) {
+    .body {
+      padding-left: 2em;
+      padding-right: 2em; } }
+  @media only screen and (min-width: 1025px) {
+    .body {
+      padding-left: 3em;
+      padding-right: 3em; } }
+  .body #header {
+    min-height: 20vh;
+    width: 90vw; }
+    .body #header .logo {
+      width: 15em;
+      float: left;
+      padding-top: 0.9em; }
+    .body #header #nav {
+      float: right;
+      padding-top: 3em; }
+    .body #header > * {
+      display: inline-block; }
+
+#backtest #form {
+  min-height: 5em;
+  margin: 0em 0em 1em 0em; }
+  #backtest #form div, #backtest #form button {
+    display: inline-block;
+    margin: 0.5em 0em; }
+  #backtest #form input, #backtest #form select {
+    margin: 0.5em 0em; }
+  #backtest #form div {
+    margin-right: 0.4em; }
+  #backtest #form label {
+    font-size: 0.8em; }
+
+#backtest #market-details {
+  text-align: center; }
+  #backtest #market-details > * {
+    display: inline-block;
+    margin-right: 3em; }
+
+#backtest #position-details {
+  min-height: 33em;
+  margin: 2.5em auto;
+  margin-bottom: 0.5em;
+  width: 100%; }
+  #backtest #position-details button {
+    font-size: 0.85em;
+    padding: 0.5em; }
+  #backtest #position-details input[type=number] {
+    -moz-appearance: textfield; }
+  #backtest #position-details input[type=number]::-webkit-inner-spin-button,
+  #backtest #position-details input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none; }
+  #backtest #position-details input {
+    max-width: 2em;
+    padding: 0.20em; }
+  #backtest #position-details #positions {
+    min-height: 500px;
+    align-items: center;
+    display: flex;
+    justify-content: center; }
+    @media only screen and (min-width: 1025px) {
+      #backtest #position-details #positions {
+        float: left;
+        width: 49%;
+        margin-right: 2em; } }
+    #backtest #position-details #positions #selections {
+      margin-bottom: 1em; }
+  #backtest #position-details #payoff {
+    margin: 4em 0em;
+    align-items: center;
+    display: flex;
+    justify-content: center; }
+    @media only screen and (min-width: 1025px) {
+      #backtest #position-details #payoff {
+        float: left;
+        width: 46%;
+        margin: 0; } }
+  #backtest #position-details tbody {
+    display: block;
+    height: 330px;
+    overflow: auto; }
+  #backtest #position-details thead, #backtest #position-details tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    /* even columns width , fix width of table too*/ }
+  #backtest #position-details thead {
+    width: calc( 100% - 1em);
+    /* scrollbar is average 1em/16px width, remove it from thead width */ }
+  #backtest #position-details thead, #backtest #position-details tbody {
+    padding-left: 2px; }
+    @media only screen and (min-width: 1025px) {
+      #backtest #position-details thead tr th:first-child, #backtest #position-details thead tr td:first-child, #backtest #position-details tbody tr th:first-child, #backtest #position-details tbody tr td:first-child {
+        width: 80px; } }
+  #backtest #position-details tr {
+    padding: 2px; }
+    #backtest #position-details tr td:first-child {
+      font-size: 14px; }
+
+#backtest #time-manager {
+  margin-top: 1em;
+  height: 180px;
+  min-height: 4em;
+  text-align: center;
+  text-justify: center; }
+  @media only screen and (min-width: 1025px) {
+    #backtest #time-manager {
+      height: 80px; } }
+  #backtest #time-manager > * {
+    display: inline-block;
+    width: 15%; }
+  #backtest #time-manager #back {
+    text-align: left;
+    float: left;
+    width: 42%; }
+  #backtest #time-manager #front {
+    text-align: right;
+    float: right;
+    width: 42%; }
+  #backtest #time-manager #current-time {
+    margin-top: 1em; }
+  #backtest #time-manager .tertiary:hover {
+    background-color: #EF9090 !important;
+    color: #FFFFFF !important; }
+  #backtest #time-manager .secondary:hover {
+    background-color: #1f01b9 !important;
+    color: #FFFFFF !important; }
+
+#backtest #expiries {
+  min-height: 4em; }
+  #backtest #expiries div {
+    display: inline-block; }
+  #backtest #expiries button {
+    margin-right: 1em;
+    padding-right: 1em;
+    padding-left: 1em; }
+
+#backtest #option-chain {
+  margin-top: 1em;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 1em; }
+  #backtest #option-chain #oc-head {
+    width: 100%;
+    height: 5em; }
+    #backtest #option-chain #oc-head #strikes-header {
+      padding-top: 1em;
+      font-weight: 500;
+      float: left; }
+    #backtest #option-chain #oc-head #strikes-choice {
+      float: right; }
+      #backtest #option-chain #oc-head #strikes-choice button, #backtest #option-chain #oc-head #strikes-choice p {
+        display: inline-block; }
+  #backtest #option-chain #oc-call-put {
+    width: 100%;
+    position: relative; }
+    #backtest #option-chain #oc-call-put p {
+      width: 49%;
+      font-weight: 700; }
+    #backtest #option-chain #oc-call-put p:first-child {
+      float: left; }
+    #backtest #option-chain #oc-call-put p:last-child {
+      float: right; }
+  #backtest #option-chain .tertiary:hover {
+    background-color: #E33033 !important;
+    color: #FFFFFF !important; }
+  #backtest #option-chain .success:hover {
+    background-color: #34C697 !important;
+    color: #FFFFFF !important; }
+  #backtest #option-chain .table table {
+    border-collapse: collapse;
+    padding: 5em;
+    margin: 0 auto; }
+    #backtest #option-chain .table table .dark-row {
+      border: 1px solid #1B1D27;
+      background-color: #F8F8FA; }
+    #backtest #option-chain .table table input {
+      max-width: 1em;
+      padding: 0.30em;
+      padding-right: 0em; }
+    #backtest #option-chain .table table td {
+      max-height: 15px; }
+  #backtest #option-chain .table tbody {
+    display: block;
+    height: 750px;
+    overflow: auto; }
+  #backtest #option-chain .table thead, #backtest #option-chain .table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    /* even columns width , fix width of table too*/
+    min-height: 3em; }
+  #backtest #option-chain .table thead {
+    width: calc( 100% - 1em);
+    /* scrollbar is average 1em/16px width, remove it from thead width */ }
+  #backtest #option-chain .table table {
+    width: 100%; }
+  #backtest #option-chain .table tbody tr {
+    background-color: #FFFFFF;
+    border: 0.5px solid #f3f3f3; }
+  @media only screen and (min-width: 1025px) {
+    #backtest #option-chain .table thead tr td:first-child, #backtest #option-chain .table thead tr th:first-child, #backtest #option-chain .table tbody tr td:first-child, #backtest #option-chain .table tbody tr th:first-child {
+      width: 15em; }
+    #backtest #option-chain .table thead tr td:last-child, #backtest #option-chain .table thead tr th:last-child, #backtest #option-chain .table tbody tr td:last-child, #backtest #option-chain .table tbody tr th:last-child {
+      width: 15em; } }
+  #backtest #option-chain .table span {
+    display: inline-block; }
+
+.margin {
+  margin-bottom: 10em;
+  width: 100%; }
+
+.pay {
+  display: block;
+  position: absolute;
+  top: 38vh;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  width: 300px; }
+  .pay p, .pay h4 {
+    margin-bottom: 1em;
+    font-size: 24px; }
+  .pay div, .pay span {
+    color: #FFFFFF !important; }
+
+.warning-cell {
+  background-color: #f443361f;
+  border-radius: 0; }
+
+#expiry-message {
+  display: block;
+  position: absolute;
+  top: 30vh;
+  left: 50%;
+  transform: translate(-50%, 0%); }
+
+.very-bold {
+  font-weight: 700; }
+
+#login {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%); }
+  @media only screen and (min-width: 1025px) {
+    #login {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 15vmin;
+      align-items: flex-end; } }
+  #login .logo {
+    width: 18em;
+    margin: auto; }
+  #login #form {
+    width: 20em;
+    margin: 0 auto;
+    margin-top: 1em;
+    font-size: 1em;
+    padding: 0.5em; }
+    #login #form input[type=number] {
+      -moz-appearance: textfield; }
+    #login #form input[type=number]::-webkit-inner-spin-button,
+    #login #form input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none; }
+    #login #form input, #login #form button {
+      /* the following ensures they're all using the same box-model for rendering */
+      -moz-box-sizing: content-box;
+      /* or `border-box` */
+      -webkit-box-sizing: content-box;
+      -ms-box-sizing: content-box;
+      box-sizing: content-box;
+      width: 92%; }
+    #login #form #trail {
+      text-align: center;
+      padding: 1em 0 2em 0; }
+      @media only screen and (min-width: 1025px) {
+        #login #form #trail {
+          padding: 1em 0 0 0; } }
+  #login #demo {
+    margin: 0 auto;
+    margin-top: 1em; }
+    @media only screen and (min-width: 1025px) {
+      #login #demo {
+        margin-top: 2em;
+        border-left: 0.5px #eee solid;
+        padding-left: 15vmin; } }
+    #login #demo div {
+      width: var(--v-size);
+      height: calc(0.5625 * var(--v-size)); }
+      #login #demo div iframe {
+        width: 100%;
+        height: 100%; }
+    #login #demo h4 {
+      margin-top: 0.5em;
+      text-align: center; }
+
+.blur {
+  -webkit-filter: blur(3px);
+  -moz-filter: blur(3px);
+  -o-filter: blur(3px);
+  -ms-filter: blur(3px);
+  filter: blur(3px);
+  background-color: #fff; }
+
+.hover-element {
+  display: none; }
+
+.hover-show:hover .hover-element {
+  display: block; }
+
+.hover-show:hover .blur-element {
+  display: none; }
+
+.loader {
+  z-index: 100;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); }
+  .loader div {
+    width: 23em; }
+    .loader div img {
+      width: 100%; }
+
+/* MCDATEPICKER */
+.mc-table__weekday {
+  color: #1B1D27 !important; }
+
+.mc-date--active.mc-date--picked {
+  background-color: #1B1D27 !important; }
+
+.mc-btn--success {
+  color: #1B1D27 !important; }
+
+.mc-btn--danger {
+  color: #EF9090 !important; }
+
+#mc-btn__ok {
+  font-weight: 900; }
+
+/* MCDATEPICKER */
+
+tr,td,th,thead,tbody{
+  padding: 10px; }
+
+  .big{
+      font-size:2em;
+  }
+  .heading{
+      font-size:1.5em;
+      font-weight:200;
+  }
+  #bot{
+    margin-bottom: 8em;
+  }
+  #position-details{
+    display: flex;
+    margin-top:0em
+
+  }
+  #position,#history{
+    margin-right:2em;
+  }
+  .toBeTraded{
+    background-color:#eb5600;
+    color:#fff;
+  }
+    </style>
+  </head>
+  <body>
+
+
+
+
+<script src="https://kite.trade/publisher.js?v=3"></script>
+
+      <div id="app" class="body"  style="display:none">
+        <div :class="loader===true?'blur':''"  id="backtest">
+
+            <div id="header">
+                <div class="logo"><img src="https://paisashare.in/images/logo.png" alt=""></div>
+                <div id="nav">
+                    <button  :disabled="loader"  class="dark-empty" v-on:click="window.open('https://paisashare.in/', '_blank').focus();">Login</button>
+                </div>
+            </div> 
+
+            <h2 v-if="position.lastEvaluationTime">Option Algo Trading Bot - Intraday Bank Nifty Straddle (Last Evaluated at {{position.lastEvaluationTime}} hrs)</h2> 
+            <br/>
+            <!-- <button v-on:click="analyze()">Next</button> -->
+            <div id="bot">
+                <div class="big" v-if="position&&position.adjustments">Current PnL : {{getPnL()}} points</div>
+                <div class="big" v-if="position&&position.adjustments">Adjustments Done : {{position.adjustments-1}}</div>
+                <div class="big" v-if="position&&position.exit">EXIT POSITION</div>
+                <div v-if="position&&position.legs&&position.legs.priceSl">Stop Loss on Close : {{position.legs.priceSl}} points</div>
+                <br/>
+                <span>Quantity</span>
+                <input type="number" name="qty" id="qty" v-model=qty step="50" min="50" max="2600">
+                <button id="trade-kite" :class="toBeTraded===true?'toBeTraded':''">Trade in Kite</button>
+                <p>P&L for {{qty}} qty : <b>{{qty*getPnL()}}</b></p>
+                <p>P&L with brokerage for {{qty}} qty : <b>{{qty*getPnL()-70*getOrderSize()/2}}</b></p>
+                <br/>
+                <br/>
+                <div v-if="latestOrders.length>0">Latest adjustment at {{latestOrders[0].time}}</div>
+                <div v-if="latestOrders.length>0"  v-for="(order,index) of latestOrders" :key="index">
+                    {{order.strike}}{{order.optionType}} {{order.type}}
+                </div>
+                <div id="position-details">
+                  <div id="position">
+                    <br/>
+                    <br/>
+                    <div>Current Position</div>
+                    <br/>
+                    <div class="table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Leg</th>
+                                    <th>Position</th>
+                                    <th>LTP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <tr v-if="legsArray.length>0"  v-for="(leg,index) of legsArray" :key="index">
+                                    <td>
+                                        {{leg.strike}} {{leg.type}}
+                                    </td>
+                                    <td>
+                                      {{leg.opType}}
+                                    </td>
+                                    <td>
+                                        {{leg.ltp}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                  </div>
+                  <div>
+                    <br/>
+                    <br/>
+                    <div>Day's Orders</div>
+                    <br/>
+                    <div class="table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Strike</th>
+                                    <th>Time</th>
+                                    <th>Transaction</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <tr v-if="ordersArray.length>0"  v-for="(order,index) of ordersArray" :key="index">
+                                    <td  >
+                                      {{order.strike}} {{order.legType}}
+                                    </td>
+                                    <td  >
+            
+                                        {{order.timestamp}}
+                                    </td>
+                                    
+                                    <td  >
+            
+                                        {{order.opType}}
+                                    </td>
+                                    <td  >
+            
+                                        {{order.quantity}}
+                                    </td>
+                                    
+                                    <td  >
+            
+                                        {{order.ltp}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                  </div>
+                </div>
+                
+                
+            </div>
+
+
+            
+            
+
+        </div>
+        <div v-if="loader" class="loader">
+            <div>
+                <img src="https://paisashare.in/images/loader.gif" alt="">
+            </div>
+        </div>
+        <div id="footer">
+            <div class="footer-elements">
+                <p>Trade with Souvik</p>
+    
+            </div>
+            <div class="footer-elements">
+
+                <a href="https://youtube.com/user/Souvik131?sub_confirmation=1" target="_blank"> <p>Subscribe and Learn on Youtube </p> <div><img src="https://paisashare.in/images/youtube.png" alt=""></div> </a>
+            </div>
+            <div  class="footer-elements">
+              <a href="https://t.me/TradeWithSouvikNow" target="_blank">
+                 <p>Join on Telegram </p> <div><img src="./images/telegram.png" alt=""></div></a>
+  
+          </div>
+
+        </div>
+    </div>
+       
+
+
+        
+  </body>
+
+
+
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script> 
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+  <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
+  
+ 
+    <script defer>
+      function run(){
+        let symbolPrefix=findGetParameter("prefix")||localStorage.getItem("prefix")||"21D23"
+        localStorage.setItem("prefix",symbolPrefix)
+
+
+
+        function findGetParameter(parameterName) {
+            var result = null,
+                tmp = [];
+            var items = location.search.substr(1).split("&");
+            for (var index = 0; index < items.length; index++) {
+                tmp = items[index].split("=");
+                if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+            }
+            return result;
+        }
+
+      KiteConnect.ready(function() {
+        
+
+        var socket = io(`https://${window.location.hostname}/`,{path:`/${window.location.pathname.split("/").filter(_=>_)[0]}/socket.io`});
+        var app = new Vue({
+            el: '#app',
+            data: {
+                position:{},
+                latestOrders:[],
+                loader:true,
+                toBeTraded:false,
+                lastTime:"",
+                legsArray:[],
+                ordersArray:[],
+                latestTransactions:[],
+                qty:localStorage.getItem("qty")||50
+            },
+            methods: {
+                init:function(){
+                    socket.emit("init",{id:findGetParameter("id")})
+                    socket.on("position",(data)=>{
+                        console.log(data)
+                        this.position=data.position
+                        this.legsArray=[]
+                        this.ordersArray=[]
+                        if(this.position.legs){
+                          let strikes=Object.keys(this.position.legs)
+                          for(const strike of strikes){
+                            if(this.position.legs[strike].call){
+                              let count=0
+                              this.position.legs[strike].call.forEach((leg)=>{
+                                if(leg.opType==="SELL"){
+                                 count--;
+                                } 
+                                if(leg.opType==="BUY"){
+                                 count++;
+                                } 
+                              })
+                              if(count>0){
+                                const ltp=this.position.legs[strike].call[this.position.legs[strike].call.length-1].ltp
+                                this.legsArray.push({opType:"BUY",type:"CE",quantity:Math.abs(count),ltp,strike})
+                              }
+                              else if(count<0){
+                                const ltp=this.position.legs[strike].call[this.position.legs[strike].call.length-1].ltp
+                                this.legsArray.push({opType:"SELL",type:"CE",quantity:Math.abs(count),ltp,strike})
+                              }
+                            }
+                            if(this.position.legs[strike].put){
+                              let count=0
+                              this.position.legs[strike].put.forEach((leg)=>{
+                                if(leg.opType==="SELL"){
+                                 count--;
+                                } 
+                                if(leg.opType==="BUY"){
+                                 count++;
+                                } 
+                              })
+                              if(count>0){
+                                const ltp=this.position.legs[strike].put[this.position.legs[strike].put.length-1].ltp
+                                this.legsArray.push({opType:"BUY",type:"PE",quantity:Math.abs(count),ltp,strike})
+                              }
+                              else if(count<0){
+                                const ltp=this.position.legs[strike].put[this.position.legs[strike].put.length-1].ltp
+                                this.legsArray.push({opType:"SELL",type:"PE",quantity:Math.abs(count),ltp,strike})
+                              }
+                            }
+                          }
+                        
+                        }
+
+                        
+                        if(this.position.orders.length>0){
+                            for(const order of this.position.orders){
+                              this.ordersArray=this.ordersArray.concat(order.orders.map((_,i)=>{
+                                  _.timestamp=this.formatTime(order.timestamp)
+                                  _.legType=_.legType.toUpperCase()=="PUT"?"PE":"CE"
+                                  return _
+                                }))
+                            }
+                        
+                            this.latestTransactions=this.position.orders[this.position.orders.length-1].orders
+                        }
+
+                        
+                        this.ordersArray=this.ordersArray.reverse()
+                        console.log(this.ordersArray)
+                        this.buildBasket()
+                        this.loader=false;
+                    })
+                    
+                   
+                },
+                getOrderSize(){
+                  if(this.ordersArray){
+                    return this.ordersArray.length
+                  }
+                  else{
+                    return 0
+                  }
+                },
+                formatTime :(_)=>(new Date(_).getHours()<10?"0"+new Date(_).getHours():new Date(_).getHours())+":"+(new Date(_).getMinutes()<10?"0"+new Date(_).getMinutes():new Date(_).getMinutes()),
+
+                buildBasket:function(){
+                      let orderToExecute=[]
+                  
+                        if(this.latestTransactions.length>0){
+                              this.lastTime=this.latestTransactions[0].timestamp
+                              this.toBeTraded=true
+                              var kite = new KiteConnect("ximm7qmpj9upv2pq");
+
+                              // Add a order
+                              
+                              for(const order of this.latestTransactions){
+                                console.log(order)
+                                  kite.add({
+                                              "exchange": "NFO",
+                                              "tradingsymbol": `BANKNIFTY${symbolPrefix}${order.strike}${order.legType}`,
+                                              "transaction_type": order.opType,
+                                              "quantity": parseInt(this.qty),
+                                              "product": "NRML",
+                                              "variety":"regular",
+                                              "order_type": "MARKET",
+                                          });
+                              }
+                              let that=this
+                              // Register an (optional) callback.
+                              kite.finished(function(status, request_token) {
+                                  alert("Status is " + status);
+                                  that.toBeTraded=false
+                              });
+
+                              // OR, link the basket to any existing element you want
+                              kite.link("#trade-kite");
+                          }
+
+                        
+
+                },
+                analyze:function(){
+                  socket.emit("analyze",{id:findGetParameter("id")})
+                },
+                getPnL:function(){
+                  try{
+                    if(this.position){
+                      
+                      let pnl=this.position.pnl
+                      if(!isNaN(this.position.bookedPnl)){
+                        pnl+=this.position.bookedPnl
+                      }
+                      pnl=this.round(pnl)
+                      if(pnl>0){
+                        return "+"+pnl
+                      }
+                      return pnl
+                    }
+                  }
+                  catch(e){
+                    return 0;
+                  }
+                  return 0;
+                },
+                round:function(num){
+                    return Math.round(num*100)/100
+                }
+            },
+            watch:{
+              qty: {
+                    handler: function (val) {
+                       localStorage.setItem("qty",val)
+                    },
+                    deep: true
+                }
+            },
+            mounted(){
+
+                document.getElementById("app").style.display="block";
+                this.init()
+            }
+        })
+
+      })
+
+    }
+    var head = document.getElementsByTagName('head')[0];
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.onload = run
+    
+    script.src = `https://${window.location.hostname}/${window.location.pathname.split("/").filter(_=>_)[0]}/socket.io/socket.io.js`;
+    head.appendChild(script);
+    </script>
+</html>
