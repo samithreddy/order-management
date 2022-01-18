@@ -8,11 +8,24 @@ const kite = require("./brokers/kite/app")
 const fp = require("./brokers/5paisa/app");
 const io = require("socket.io-client")
 const socket = io("wss://paisashare.in", {path: '/user-auth/socket.io/'});
+const persist = require("./storage/persist")
+const strategyConfig = require("./strategy.json")
+let data={}
+
+socket.on("connect",run);
 
 
-socket.on("connect",async () => {
+async function run () {
     console.log("Connected to Server")
+    data = await persist.get()
 
+    try{
+        await kite.init();
+        console.log("Kite Login Complete")
+    }
+    catch(e){
+        console.log("Could not initialize kite",e)
+    }
     try{
         await fp.init();
         console.log("5Paisa Logged in")
@@ -23,6 +36,7 @@ socket.on("connect",async () => {
 
     socket.on("kite-login",async request=>{
         const {requestToken}=request
+        console.log("Kite login request",requestToken)
         const params = new URLSearchParams();
         params.append( 'api_key', process.env.KITE_API_KEY);
         params.append( 'request_token',requestToken);
@@ -32,14 +46,31 @@ socket.on("connect",async () => {
               body:   params,
               headers: { 'X-Kite-Version': '3' },
         })).json()
+        
         if(status=="success"){
-                try{
-                    await kite.init(data,requestToken);
-                    console.log("Kite Logged in")
-                }
-                catch(e){
-                    console.log("Could not initialize kite",e)
-                }
+            data["kite"]={user:data,requestToken}
+            await persist.set(data)
+            try{
+                await kite.init();
+                console.log("Kite Login Complete")
+            }
+            catch(e){
+                console.log("Could not initialize kite",e)
+            }
+        }
+        else{
+            console.log(status,data)
+        }
+    })
+
+    socket.on("kite-login-user",async request=>{
+        data["kite"]=request
+        try{
+            await kite.init();
+            console.log("Kite Login data received")
+        }
+        catch(e){
+            console.log("Could not initialize kite",e)
         }
     })
 
@@ -48,15 +79,15 @@ socket.on("connect",async () => {
     socket.on("trade",async request=>{
         const {data}=request
         const {requestOrders,strategyId,expiry}=data
-        if(strategyId==process.env.STRATEGY_ID){
+        if(strategyConfig[strategyId]){
             console.log("Trading orders",strategyId,expiry,requestOrders)
-            await broker.order(requestOrders,{sendMessage:(_)=>{console.log(strategyId,_)}},expiry)
+            await broker.order(strategyId,requestOrders,{sendMessage:(_)=>{console.log(strategyId,_)}},expiry)
         }
     })
 
     socket.emit("init",{userId:process.env.MY_TELEGRAM_ID})
     
-});
+}
 
 
 

@@ -1,0 +1,26 @@
+{
+    "banknifty_straddle-M-D3KXEpT7O3ZMYdAAAH":{
+        "PLACE_ORDER_KITE":false,
+        "KITE_ORDER_QTY":25,
+        "PLACE_ORDER_5PAISA":false,
+        "FIVEPAISA_ORDER_QTY":25
+    },
+    "nifty_straddle-z2P0eqvEFU-7Usa3AAAD":{
+        "PLACE_ORDER_KITE":false,
+        "KITE_ORDER_QTY":50,
+        "PLACE_ORDER_5PAISA":false,
+        "FIVEPAISA_ORDER_QTY":50
+    },
+    "NIFTY_ic_intraday":{
+        "PLACE_ORDER_KITE":false,
+        "KITE_ORDER_QTY":50,
+        "PLACE_ORDER_5PAISA":false,
+        "FIVEPAISA_ORDER_QTY":50
+    },
+    "BANKNIFTY_straddle_intraday":{
+        "PLACE_ORDER_KITE":false,
+        "KITE_ORDER_QTY":25,
+        "PLACE_ORDER_5PAISA":false,
+        "FIVEPAISA_ORDER_QTY":25
+    }
+}

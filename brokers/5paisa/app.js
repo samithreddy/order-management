@@ -44,7 +44,7 @@ async function init(){
         await client.init(loginCred)
 }
 
-async function placeOrder(orders,expiry){
+async function placeOrder(strategyId,orders,expiry){
     const expiryCap=expiry.toUpperCase().replace(/-/g," ")
     const expiryDate=new Date(expiryCap)
 
@@ -66,7 +66,7 @@ async function placeOrder(orders,expiry){
         }
         let i=0
         for(const _ of data){
-            responses.push(await client.placeOrder(orders[i].type, _.Token, (await getQty()), "N", {
+            responses.push(await client.placeOrder(orders[i].type, _.Token, (await getQty(strategyId)), "N", {
                 exchangeSegment: "D",
                 atMarket: true,
                 isStopLossOrder: false,
@@ -86,8 +86,8 @@ async function placeOrder(orders,expiry){
 }
 
 
-async function getQty(){
-        return process.env.FIVEPAISA_ORDER_QTY
+async function getQty(strategyId){
+        return strategyConfig[strategyId].FIVEPAISA_ORDER_QTY
 }
 
 

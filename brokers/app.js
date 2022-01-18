@@ -1,12 +1,13 @@
 
 const kiteOrder = require("./kite/placeOrder")
 const fpOrder = require("./5paisa/placeOrder")
+const strategyConfig = require("../strategy.json")
 
 module.exports.order=order
 
 
 
-async function order(requestOrders,bot,expiry,tradeInKite=true,tradeInFp=true){
+async function order(strategyId,requestOrders,bot,expiry,tradeInKite=true,tradeInFp=true){
     let requestOrdersBuy=requestOrders.filter(leg=>leg.type==="BUY")
     let requestOrdersSell=requestOrders.filter(leg=>leg.type==="SELL")
     const requestDataBuy={
@@ -16,13 +17,14 @@ async function order(requestOrders,bot,expiry,tradeInKite=true,tradeInFp=true){
         orders:requestOrdersSell,expiry
     }
     let user={id:process.env.MY_TELEGRAM_ID}
-    if(process.env.PLACE_ORDER_5PAISA.trim()==="true"&&tradeInFp){
+    
+    if(strategyConfig[strategyId].PLACE_ORDER_5PAISA.trim()==="true"&&tradeInFp){
         
 
         setTimeout(async()=>{
             try{
-                await fpOrder.order(requestDataBuy)
-                await fpOrder.order(requestDataSell)
+                await fpOrder.order(strategyId,requestDataBuy)
+                await fpOrder.order(strategyId,requestDataSell)
                 
             }
             catch(e){
@@ -41,12 +43,11 @@ async function order(requestOrders,bot,expiry,tradeInKite=true,tradeInFp=true){
         
         console.log("::TRIED TO PLACE A TRADE IN 5PAISA::")
     }
-    if(process.env.PLACE_ORDER_KITE.trim()==="true"&&tradeInKite){
+    if(strategyConfig[strategyId].PLACE_ORDER_KITE.trim()==="true"&&tradeInKite){
 
         setTimeout(async()=>{
             try{
-                console.log([requestDataBuy,requestDataSell])
-                await kiteOrder.order([requestDataBuy,requestDataSell],bot)
+                await kiteOrder.order(strategyId,[requestDataBuy,requestDataSell],bot)
             }
             catch(e){
                 let err=e
@@ -64,7 +65,7 @@ async function order(requestOrders,bot,expiry,tradeInKite=true,tradeInFp=true){
         
         console.log("::TRIED TO PLACE A TRADE IN KITE::")
     }
-    if(process.env.PLACE_ORDER_5PAISA.trim()==="true"||process.env.PLACE_ORDER_KITE.trim()==="true"){
+    if(strategyConfig[strategyId].PLACE_ORDER_5PAISA.trim()==="true"||strategyConfig[strategyId].PLACE_ORDER_KITE.trim()==="true"){
         console.log("Requested for following orders",requestOrders)
     }
 }

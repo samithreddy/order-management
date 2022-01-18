@@ -1,8 +1,10 @@
 
 const kite = require("./app.js")
+const strategyConfig = require("../../strategy.json")
+
 let isFailing=false;
 module.exports={
-    order:(requests,bot)=>{
+    order:(strategyId,requests,bot)=>{
         return new Promise(async (resolve,reject)=>{
             try{
                 const kiteOps = kite.getOperations()
@@ -57,7 +59,7 @@ module.exports={
                     const tryLimit=5
                     for (const request of requests){
                         reqOrdersLength+=request.orders.length
-                        const orderRespArray=await requestOrdersAsync(request)
+                        const orderRespArray=await requestOrdersAsync(strategyId,request)
                         completedOrders=completedOrders.concat(orderRespArray)
                         while(ackOrdersCount!==reqOrdersLength&&tryCount<tryLimit){
                             console.log("::::LOG:::::")
@@ -92,7 +94,7 @@ async function waitForAWhile(time){
     })
 }
 
-async function requestOrdersAsync(request){
+async function requestOrdersAsync(strategyId,request){
     return new Promise(async (resolve,reject)=>{
         const completedOrders=[]
         const kiteOps = kite.getOperations()
@@ -102,7 +104,7 @@ async function requestOrdersAsync(request){
                     "exchange":"NFO",
                     "tradingsymbol":`${order.script}${order.kiteExpiryPrefix}${order.strike}${order.optionType}`,
                     "transaction_type":order.type,
-                    "quantity":(await getQty()),
+                    "quantity":(await getQty(strategyId)),
                     "product": "MIS",
                     "order_type": "MARKET"
                 }
@@ -134,8 +136,8 @@ async function requestOrdersAsync(request){
     
 }
 
-async function getQty(){
-            return process.env.KITE_ORDER_QTY
+async function getQty(strategyId){
+            return strategyConfig[strategyId].KITE_ORDER_QTY
 }
 
 

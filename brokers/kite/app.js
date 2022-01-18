@@ -1,6 +1,7 @@
+
+
 var KiteConnect = require("kiteconnect").KiteConnect;
 
-let kiteExpiryPrefix
 const operations={isInit:false}
 let callback=console.log
 
