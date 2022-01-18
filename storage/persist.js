@@ -26,14 +26,12 @@ module.exports.get=()=>{
         fs.readFile(`${__dirname}/data/${formatDate(new Date())}.json`, 'utf8', function(err, data){
             
             if (err) {
-                console.log(err)
                 return resolve({});
             }
             try{
                 return resolve(JSON.parse(data));
             }
             catch(e){
-                console.log(e)
                 return resolve({});
             }
         });
