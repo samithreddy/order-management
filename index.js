@@ -65,6 +65,7 @@ async function run () {
 
     socket.on("kite-login-user",async request=>{
         data["kite"]=request
+        await persist.set(data)
         try{
             await kite.init();
             console.log("Kite Login data received")
@@ -79,6 +80,7 @@ async function run () {
     socket.on("trade",async request=>{
         const {data}=request
         const {requestOrders,strategyId,expiry}=data
+        console.log(strategyConfig[strategyId],strategyId)
         if(strategyConfig[strategyId]){
             console.log("Trading orders",strategyId,expiry,requestOrders)
             await broker.order(strategyId,requestOrders,{sendMessage:(_)=>{console.log(strategyId,_)}},expiry)

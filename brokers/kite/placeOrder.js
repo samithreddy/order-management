@@ -32,12 +32,11 @@ module.exports={
                                         break;
                                     }
                                     else if(statusMap[id]&&statusMap[id]==="UPDATE"){
-                                        console.log(`Order failed for ${id} ${statusMap[id]}`)
+                                        console.log(`Order update for ${id} ${statusMap[id]}`)
                                     }
                                     else if(statusMap[id]&&statusMap[id]!=="COMPLETE"){
                                         isComplete=false
-                                        console.log(`Order failed for ${id} ${statusMap[id]}`)
-                                        bot.sendMessage({chatId:process.env.MY_TELEGRAM_ID,text:`Error in Placing kite Order : Order failed for ${id} ${statusMap[id]}`,suggestions:[]})
+                                        bot.sendMessage(`Error in Placing kite Order : Order failed for ${id} ${statusMap[id]}`)
                                         break;
                                     }
                                     if(statusMap[id]&&statusMap[id]==="COMPLETE"){
@@ -47,8 +46,7 @@ module.exports={
                             }
                         }
                         if(isComplete&&requestedOrderIds.length>0&&postbackOrders.length>0){
-                            console.log(postbacks,"KITE_POSTBACKS")
-                            bot.sendMessage({chatId:process.env.MY_TELEGRAM_ID,text:`All Kite orders were successful`,suggestions:[]})
+                            bot.sendMessage(`All Kite orders were successful`)
                             kite.subscribe(console.log)
                                     
                         }
@@ -62,16 +60,11 @@ module.exports={
                         const orderRespArray=await requestOrdersAsync(strategyId,request)
                         completedOrders=completedOrders.concat(orderRespArray)
                         while(ackOrdersCount!==reqOrdersLength&&tryCount<tryLimit){
-                            console.log("::::LOG:::::")
-                            console.log(ackOrdersCount,reqOrdersLength,"WAITING FOR ACK")
                             await waitForAWhile(100)
                             tryCount++;
                         }
-                        console.log("::::LOG:::::")
-                        console.log(ackOrdersCount,reqOrdersLength,"PROCEEEDING")
                     }
                     requestedOrderIds=completedOrders.map(_=>_.response.order_id.toString().trim())
-                    console.log(requestedOrderIds,"KITE_REQUESTS")
                     resolve(requestedOrderIds)
                 }
                 else{
@@ -128,8 +121,7 @@ async function requestOrdersAsync(strategyId,request){
 
         setTimeout(()=>{
             if(request.orders.length!==completedOrders.length){
-                console.log("Timed out without resolution")
-                reject("Timeout error")
+                reject("Timed out without resolution")
             }
         },60*1000)
     })

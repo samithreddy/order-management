@@ -8,7 +8,7 @@
     "nifty_straddle-z2P0eqvEFU-7Usa3AAAD":{
         "PLACE_ORDER_KITE":false,
         "KITE_ORDER_QTY":50,
-        "PLACE_ORDER_5PAISA":false,
+        "PLACE_ORDER_5PAISA":true,
         "FIVEPAISA_ORDER_QTY":50
     },
     "NIFTY_ic_intraday":{

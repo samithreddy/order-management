@@ -2,12 +2,18 @@
 
 var KiteConnect = require("kiteconnect").KiteConnect;
 
+
+const persist = require("../../storage/persist")
+
 const operations={isInit:false}
 let callback=console.log
-
+let data={}
 
 module.exports={
-    init:async(user,requestToken)=>{
+    init:async()=>{
+        data = await persist.get()
+        let {kite}=data
+        let {user,requestToken}=kite
         operations.isInit=false
         kc = new KiteConnect({
             "api_key": process.env.KITE_API_KEY,

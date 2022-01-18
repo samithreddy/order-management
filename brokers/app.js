@@ -18,7 +18,7 @@ async function order(strategyId,requestOrders,bot,expiry,tradeInKite=true,tradeI
     }
     let user={id:process.env.MY_TELEGRAM_ID}
     
-    if(strategyConfig[strategyId].PLACE_ORDER_5PAISA.trim()==="true"&&tradeInFp){
+    if(strategyConfig[strategyId].PLACE_ORDER_5PAISA&&tradeInFp){
         
 
         setTimeout(async()=>{
@@ -35,15 +35,14 @@ async function order(strategyId,requestOrders,bot,expiry,tradeInKite=true,tradeI
                 else{
                     err=e.toString()
                 }
-                bot.sendMessage({chatId:user.id,text:`Error in Placing 5paisa Order ${err}`,suggestions:[]})
-                console.log(e,"Placing order 5paisa error")
+                bot.sendMessage(`Error in Placing 5paisa Order ${err}`)
             }
 
         },0)
         
         console.log("::TRIED TO PLACE A TRADE IN 5PAISA::")
     }
-    if(strategyConfig[strategyId].PLACE_ORDER_KITE.trim()==="true"&&tradeInKite){
+    if(strategyConfig[strategyId].PLACE_ORDER_KITE&&tradeInKite){
 
         setTimeout(async()=>{
             try{
@@ -57,15 +56,14 @@ async function order(strategyId,requestOrders,bot,expiry,tradeInKite=true,tradeI
                 else{
                     err=e.toString()
                 }
-                bot.sendMessage({chatId:user.id,text:`Error in Placing kite Order ${err}`,suggestions:[]})
-                console.log(e,"Placing order kite error")
+                bot.sendMessage(`Error in Placing kite Order ${err}`)
             }
 
         },0)
         
         console.log("::TRIED TO PLACE A TRADE IN KITE::")
     }
-    if(strategyConfig[strategyId].PLACE_ORDER_5PAISA.trim()==="true"||strategyConfig[strategyId].PLACE_ORDER_KITE.trim()==="true"){
+    if(strategyConfig[strategyId].PLACE_ORDER_5PAISA||strategyConfig[strategyId].PLACE_ORDER_KITE){
         console.log("Requested for following orders",requestOrders)
     }
 }
