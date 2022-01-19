@@ -110,7 +110,7 @@ function formatDateTime(date) {
     const [month, day, year]=dateArray[0].trim().split("/")
     const [time, ampm]=dateArray[1].trim().split(" ")
     const [hour, mins,_]=time.split(":")
-    return `${year}-${addZero(month)}-${addZero(day)} ${addZero(hour)}:${addZero(mins)} ${ampm}`
+    return `${year}-${addZero(month)}-${addZero(day)} ${addZero(hour)}:${addZero(mins)}${ampm?ampm:''}`
 }
 function addZero(val){
     return val<10&&!val.startsWith("0")?"0"+val:val
