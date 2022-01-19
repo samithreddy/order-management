@@ -12,9 +12,9 @@
         "FIVEPAISA_ORDER_QTY":50
     },
     "NIFTY_ic_intraday":{
-        "PLACE_ORDER_KITE":true,
+        "PLACE_ORDER_KITE":false,
         "KITE_ORDER_QTY":50,
-        "PLACE_ORDER_5PAISA":true,
+        "PLACE_ORDER_5PAISA":false,
         "FIVEPAISA_ORDER_QTY":50
     },
     "BANKNIFTY_straddle_intraday":{
