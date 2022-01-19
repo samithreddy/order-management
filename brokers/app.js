@@ -29,13 +29,7 @@ async function order(strategyId,requestOrders,bot,expiry,tradeInKite=true,tradeI
             }
             catch(e){
                 let err=e
-                if(typeof e==="object"){
-                    err=JSON.stringify(e)
-                }
-                else{
-                    err=e.toString()
-                }
-                bot.sendMessage(`Error in Placing 5paisa Order ${err}`)
+                bot.sendMessage(`Error in Placing 5paisa Order ${err.toString()}`)
             }
 
         },0)
@@ -49,14 +43,7 @@ async function order(strategyId,requestOrders,bot,expiry,tradeInKite=true,tradeI
                 await kiteOrder.order(strategyId,[requestDataBuy,requestDataSell],bot)
             }
             catch(e){
-                let err=e
-                if(typeof e==="object"){
-                    err=JSON.stringify(e)
-                }
-                else{
-                    err=e.toString()
-                }
-                bot.sendMessage(`Error in Placing kite Order ${err}`)
+                bot.sendMessage(`Error in Placing kite Order ${e}`)
             }
 
         },0)
@@ -64,6 +51,6 @@ async function order(strategyId,requestOrders,bot,expiry,tradeInKite=true,tradeI
         console.log("::TRIED TO PLACE A TRADE IN KITE::")
     }
     if(strategyConfig[strategyId].PLACE_ORDER_5PAISA||strategyConfig[strategyId].PLACE_ORDER_KITE){
-        console.log("Requested for following orders",requestOrders)
+        // console.log("Requested for following orders",requestOrders)
     }
 }

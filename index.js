@@ -80,10 +80,19 @@ async function run () {
     socket.on("trade",async request=>{
         const {data}=request
         const {requestOrders,strategyId,expiry}=data
-        console.log(strategyConfig[strategyId],strategyId)
+        console.log("Order for ",strategyId)
         if(strategyConfig[strategyId]){
             console.log("Trading orders",strategyId,expiry,requestOrders)
-            await broker.order(strategyId,requestOrders,{sendMessage:(_)=>{console.log(strategyId,_)}},expiry)
+            data = await persist.get()
+            data.orderTimeline=data.orderTimeline||[]
+            data.orderTimeline.push({timstamp:formatDateTime(new Date()),requestOrders,strategyId,expiry})
+            await persist.set(data)
+            await broker.order(strategyId,requestOrders,{sendMessage:async(error)=>{
+                console.log(strategyId,error)
+                data.errors=data.errors||[]
+                data.errors.push({timstamp:formatDateTime(new Date()),error,strategyId,expiry})
+                await persist.set(data)
+            }},expiry)
         }
     })
 
@@ -91,6 +100,17 @@ async function run () {
     
 }
 
+
+function formatDateTime(date) {
+    const dateArray = date.toLocaleString().split(",")
+    const [month, day, year]=dateArray[0].trim().split("/")
+    const [time, ampm]=dateArray[1].trim().split(" ")
+    const [hour, mins,_]=time.split(":")
+    return `${year}-${addZero(month)}-${addZero(day)} ${addZero(hour)}:${addZero(mins)} ${ampm}`
+}
+function addZero(val){
+    return val<10&&!val.startsWith("0")?"0"+val:val
+}
 
 
 

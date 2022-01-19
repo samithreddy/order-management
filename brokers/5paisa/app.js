@@ -1,7 +1,8 @@
 // Configuration for your app
 require('dotenv').config()
+const strategyConfig = require("../../strategy.json")
 
-
+const persist = require("../../storage/persist")
 
 const conf = {
     "appSource": process.env.FIVEPAISA_APPSOURCE,
@@ -45,11 +46,12 @@ async function init(){
 }
 
 async function placeOrder(strategyId,orders,expiry){
+
     const expiryCap=expiry.toUpperCase().replace(/-/g," ")
     const expiryDate=new Date(expiryCap)
-
     const responses=[]
     if(orders.length>0){
+
         const data =(await client.getMarketFeed(orders.map(order=>{
             return {
                 "Exch":"N",
@@ -61,12 +63,14 @@ async function placeOrder(strategyId,orders,expiry){
             }
         })))
 
+        
         if(data.length!==orders.length){
             throw "Could not fetch data"
         }
         let i=0
+        const qty = await getQty(strategyId)
         for(const _ of data){
-            responses.push(await client.placeOrder(orders[i].type, _.Token, (await getQty(strategyId)), "N", {
+            const resp=await client.placeOrder(orders[i].type, _.Token, qty, "N", {
                 exchangeSegment: "D",
                 atMarket: true,
                 isStopLossOrder: false,
@@ -77,9 +81,13 @@ async function placeOrder(strategyId,orders,expiry){
                 ahPlaced: "N",
                 IOCOrder: false,
                 price: 0
-            }))
+            })
+            responses.push(resp)
             i++;
         }
+        data.fpResponses=data.fpResponses||[]
+        data.fpResponses.push({timstamp:formatDateTime(new Date()),responses,strategyId})
+        await persist.set(data)
     }
     return responses
     
@@ -90,7 +98,16 @@ async function getQty(strategyId){
         return strategyConfig[strategyId].FIVEPAISA_ORDER_QTY
 }
 
-
+function formatDateTime(date) {
+    const dateArray = date.toLocaleString().split(",")
+    const [month, day, year]=dateArray[0].trim().split("/")
+    const [time, ampm]=dateArray[1].trim().split(" ")
+    const [hour, mins,_]=time.split(":")
+    return `${year}-${addZero(month)}-${addZero(day)} ${addZero(hour)}:${addZero(mins)} ${ampm}`
+}
+function addZero(val){
+    return val<10&&!val.startsWith("0")?"0"+val:val
+}
 
 module.exports.init=init
 module.exports.placeOrder=placeOrder
