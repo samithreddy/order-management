@@ -812,36 +812,51 @@ tr,td,th,thead,tbody{
                         this.data=data.data
                         this.kiteKey=data.kiteKey
                         this.orders=[]
-                        this.data.orderTimeline.forEach(el=>{
-                            el.requestOrders.forEach(order=>{
-                                order.timestamp=el.timestamp
-                                order.strategyId=el.strategyId
-                                order.expiry=el.expiry
-                                this.orders.push(order)
-                            })
-                        })
-                        this.orders=this.orders.reverse()
+                        try{
+                          this.data.orderTimeline.forEach(el=>{
+                              el.requestOrders.forEach(order=>{
+                                  order.timestamp=el.timestamp
+                                  order.strategyId=el.strategyId
+                                  order.expiry=el.expiry
+                                  this.orders.push(order)
+                              })
+                          })
+                          this.orders=this.orders.reverse()
+                        }
+                        catch(e){
+                          console.log("orders error",e)
+                        }
 
                         this.kiteResponses=[]
-                        this.data.kiteResponses.forEach(el=>{
-                            el.responses.forEach(order=>{
-                                order={orderId:order.response.order_id}
-                                order.time=el.timestamp
-                                order.strategyId=el.strategyId
-                                this.kiteResponses.push(order)
-                            })
-                        })
-                        this.kiteResponses=this.kiteResponses.reverse()
-
+                        try{
+                          this.data.kiteResponses.forEach(el=>{
+                              el.responses.forEach(order=>{
+                                  order={orderId:order.response.order_id}
+                                  order.time=el.timestamp
+                                  order.strategyId=el.strategyId
+                                  this.kiteResponses.push(order)
+                              })
+                          })
+                          this.kiteResponses=this.kiteResponses.reverse()
+                        }
+                        catch(e){
+                          console.log("kite error",e)
+                        }
                         this.fpResponses=[]
-                        this.data.fpResponses.forEach(el=>{
-                            el.responses.forEach(order=>{
-                                order.time=el.timestamp
-                                order.strategyId=el.strategyId
-                                this.fpResponses.push(order)
-                            })
-                        })
-                        this.fpResponses=this.fpResponses.reverse()
+                        try{
+                          
+                          this.data.fpResponses.forEach(el=>{
+                              el.responses.forEach(order=>{
+                                  order.time=el.timestamp
+                                  order.strategyId=el.strategyId
+                                  this.fpResponses.push(order)
+                              })
+                          })
+                          this.fpResponses=this.fpResponses.reverse()
+                        }
+                        catch(e){
+                          console.log("fp error",e)
+                        }
 
                     })
                     
