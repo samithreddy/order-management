@@ -50,8 +50,9 @@ module.exports={
         operations.orderMargins=orderMargins
         operations.basketMargins=basketMargins
         operations.isInit=true
-
-        console.log("Kite Logged in")
+        storedData = await persist.get()
+        storedData.kiteLogin=true
+        await persist.set(storedData)
         return operations
 
 

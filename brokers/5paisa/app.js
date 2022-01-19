@@ -43,6 +43,9 @@ function formatDate(date) {
 async function init(){
         loginCred = await client.login(...creds)
         await client.init(loginCred)
+        storedData = await persist.get()
+        storedData.fpLogin=true
+        await persist.set(storedData)
 }
 
 async function placeOrder(strategyId,orders,expiry){
@@ -87,7 +90,7 @@ async function placeOrder(strategyId,orders,expiry){
         }
         storedData=await persist.get()
         storedData.fpResponses=storedData.fpResponses||[]
-        storedData.fpResponses.push({timstamp:formatDateTime(new Date()),responses,strategyId})
+        storedData.fpResponses.push({timestamp:formatDateTime(new Date()),responses,strategyId})
         await persist.set(storedData)
     }
     return responses

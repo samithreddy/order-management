@@ -52,7 +52,7 @@ module.exports={
                             kite.subscribe(console.log)
                             storedData=await persist.get()
                             storedData.kiteUpdates=storedData.kiteUpdates||[]
-                            storedData.kiteUpdates.push({timstamp:formatDateTime(new Date()),message:"All orders successful",strategyId})
+                            storedData.kiteUpdates.push({timestamp:formatDateTime(new Date()),message:"All orders successful",strategyId})
                             await persist.set(storedData)
                                     
                         }
@@ -115,7 +115,7 @@ async function requestOrdersAsync(strategyId,request){
                         resolve(completedOrders)
                         storedData=await persist.get()
                         storedData.kiteResponses=storedData.kiteResponses||[]
-                        storedData.kiteResponses.push({timstamp:formatDateTime(new Date()),responses:completedOrders,strategyId})
+                        storedData.kiteResponses.push({timestamp:formatDateTime(new Date()),responses:completedOrders,strategyId})
                         await persist.set(storedData)
                     }
                 })

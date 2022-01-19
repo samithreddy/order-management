@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Options Algo Trading Bot</title>
+    <style>
+:root {
+  --v-size: 22em; }
+  @media only screen and (min-width: 1025px) {
+    :root {
+      --v-size: 28em; } }
+
+button {
+  cursor: pointer; }
+
+* {
+  margin: 0;
+  padding: 0;
+  color: #1B1D27;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+}
+
+image {
+  width: 100%; }
+
+b {
+  font-weight: 400; }
+
+span {
+  font-weight: 400; }
+
+.pay-iframe {
+  border: 0;
+  min-height: 40em;
+  min-width: 25em; }
+
+p {
+  font-size: inherit;
+  padding: 0.1em; }
+
+.muted {
+  background-color: #ffc10714;
+  border-radius: 0px; }
+
+input, button, select {
+  font-size: inherit;
+  padding: 0.5em;
+  margin: 0.5em 0.2em;
+  min-height: 1.4em;
+  border-radius: 0.25em;
+  border: 1px solid #d0d0d0;
+  min-width: 3em; }
+
+.dark-empty {
+  border: 2px solid #1B1D27;
+  background-color: #FFFFFF;
+  color: #1B1D27; }
+
+.dark-fill {
+  border: 2px solid #1B1D27;
+  background-color: #1B1D27;
+  color: #FFFFFF; }
+
+.primary {
+  border: 1px solid #1f01b9;
+  background-color: #1f01b9;
+  color: #FFFFFF; }
+
+.secondary {
+  border: 1px solid #1f01b9;
+  background-color: #FFFFFF;
+  color: #1B1D27; }
+
+.tertiary {
+  border: 1px solid #E33033;
+  background-color: #FFFFFF;
+  color: #1B1D27; }
+
+.image-button {
+  border: 0px;
+  background-color: #FFFFFF;
+  width: 20px; }
+  .image-button img {
+    width: 100%; }
+
+.inline {
+  display: inline-block;
+  padding-left: 2px; }
+
+.tooltip {
+  position: relative;
+  display: inline-block; }
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    background-color: #1B1D27;
+    color: #FFFFFF;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    margin: 0 0 0 0em;
+    font-size: 12px;
+    top: -2em; }
+
+#footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background-color: #FFFFFF;
+  border-radius: 2em 2em 0em 0em;
+  width: 100%;
+  padding-top: 1em;
+  font-size: 14px;
+  padding-right: 3em;
+  padding-bottom: 2em; }
+  @media only screen and (min-width: 1025px) {
+    #footer {
+      padding-left: 3em; } }
+  #footer .footer-elements {
+    float: left;
+    width: auto;
+    padding-left: 5em;
+    text-align: center;
+    border-right: 1px solid #1B1D27;
+    padding-right: 0.5em;
+    padding-left: 0.5em; }
+    @media only screen and (min-width: 1025px) {
+      #footer .footer-elements {
+        padding-right: 1em;
+        padding-left: 1em; } }
+    #footer .footer-elements a {
+      text-decoration: none; }
+      #footer .footer-elements a div {
+        display: inline-block;
+        width: 17px; }
+        #footer .footer-elements a div img {
+          width: 100%; }
+    #footer .footer-elements p {
+      display: inline-block; }
+  #footer .footer-elements:last-child {
+    border: 0; }
+  #footer .footer-elements:first-child {
+    display: none; }
+    @media only screen and (min-width: 1025px) {
+      #footer .footer-elements:first-child {
+        display: inline-block; } }
+    #footer .footer-elements:first-child p {
+      font-weight: 700; }
+
+.tooltip:hover .tooltiptext {
+  visibility: visible; }
+
+.success {
+  border: 1px solid #34C697;
+  background-color: #FFFFFF;
+  color: #1B1D27; }
+
+.warning {
+  border: 1px solid #EF9090;
+  background-color: #FFFFFF;
+  color: #1B1D27; }
+
+.mobile-hide {
+  display: none; }
+  @media only screen and (min-width: 1025px) {
+    .mobile-hide {
+      display: revert; } }
+
+.table, table, td, tr, thead, tbody {
+  border-radius: 0.5em; }
+
+
+tbody {
+    display: block;
+    max-height: 330px;
+    overflow: scroll;
+}
+thead, tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;/* even columns width , fix width of table too*/
+}
+thead {
+    width: calc( 100% - 1em )/* scrollbar is average 1em/16px width, remove it from thead width */
+}
+
+.error {
+  color: #EF9090; }
+
+.logo img {
+  width: 100%; }
+
+.sell {
+  color: #E33033 !important; }
+
+.buy {
+  color: #1f01b9 !important; }
+
+.profit {
+  color: #34C697; }
+
+.loss {
+  color: #E33033; }
+
+canvas {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 6px;
+  border-radius: 0.5em;
+  padding: 0.1em; }
+
+.table table {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 6px;
+  border-collapse: collapse;
+  text-align: center;
+  vertical-align: middle; }
+
+.table th, .table td {
+  padding: 0px,4px; }
+
+.table tbody tr:nth-child(odd) {
+  background-color: #FFFFFF; }
+
+.table tbody tr:nth-child(even) {
+  background-color: #f9f9f9; }
+
+.table tbody tr:last-child {
+  background-color: #FFFFFF; }
+
+.table thead th {
+  height: 5em;
+  line-height: 1em;
+  background-color: #F8F8FA;
+  font-weight: 500; }
+
+.body {
+  position: absolute;
+  padding-left: 0.1em;
+  padding-right: 0.1em;
+  padding-top: 1.5em; }
+  @media only screen and (min-width: 750px) {
+    .body {
+      padding-left: 2em;
+      padding-right: 2em; } }
+  @media only screen and (min-width: 1025px) {
+    .body {
+      padding-left: 3em;
+      padding-right: 3em; } }
+  .body #header {
+    min-height: 20vh;
+    width: 90vw; }
+    .body #header .logo {
+      width: 15em;
+      float: left;
+      padding-top: 0.9em; }
+    .body #header #nav {
+      float: right;
+      padding-top: 3em; }
+    .body #header > * {
+      display: inline-block; }
+
+#backtest #form {
+  min-height: 5em;
+  margin: 0em 0em 1em 0em; }
+  #backtest #form div, #backtest #form button {
+    display: inline-block;
+    margin: 0.5em 0em; }
+  #backtest #form input, #backtest #form select {
+    margin: 0.5em 0em; }
+  #backtest #form div {
+    margin-right: 0.4em; }
+  #backtest #form label {
+    font-size: 0.8em; }
+
+#backtest #market-details {
+  text-align: center; }
+  #backtest #market-details > * {
+    display: inline-block;
+    margin-right: 3em; }
+
+#backtest #position-details {
+  min-height: 33em;
+  margin: 2.5em auto;
+  margin-bottom: 0.5em;
+  width: 100%; }
+  #backtest #position-details button {
+    font-size: 0.85em;
+    padding: 0.5em; }
+  #backtest #position-details input[type=number] {
+    -moz-appearance: textfield; }
+  #backtest #position-details input[type=number]::-webkit-inner-spin-button,
+  #backtest #position-details input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none; }
+  #backtest #position-details input {
+    max-width: 2em;
+    padding: 0.20em; }
+  #backtest #position-details #positions {
+    min-height: 500px;
+    align-items: center;
+    display: flex;
+    justify-content: center; }
+    @media only screen and (min-width: 1025px) {
+      #backtest #position-details #positions {
+        float: left;
+        width: 49%;
+        margin-right: 2em; } }
+    #backtest #position-details #positions #selections {
+      margin-bottom: 1em; }
+  #backtest #position-details #payoff {
+    margin: 4em 0em;
+    align-items: center;
+    display: flex;
+    justify-content: center; }
+    @media only screen and (min-width: 1025px) {
+      #backtest #position-details #payoff {
+        float: left;
+        width: 46%;
+        margin: 0; } }
+  #backtest #position-details tbody {
+    display: block;
+    height: 330px;
+    overflow: auto; }
+  #backtest #position-details thead, #backtest #position-details tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    /* even columns width , fix width of table too*/ }
+  #backtest #position-details thead {
+    width: calc( 100% - 1em);
+    /* scrollbar is average 1em/16px width, remove it from thead width */ }
+  #backtest #position-details thead, #backtest #position-details tbody {
+    padding-left: 2px; }
+    @media only screen and (min-width: 1025px) {
+      #backtest #position-details thead tr th:first-child, #backtest #position-details thead tr td:first-child, #backtest #position-details tbody tr th:first-child, #backtest #position-details tbody tr td:first-child {
+        width: 80px; } }
+  #backtest #position-details tr {
+    padding: 2px; }
+    #backtest #position-details tr td:first-child {
+      font-size: 14px; }
+
+#backtest #time-manager {
+  margin-top: 1em;
+  height: 180px;
+  min-height: 4em;
+  text-align: center;
+  text-justify: center; }
+  @media only screen and (min-width: 1025px) {
+    #backtest #time-manager {
+      height: 80px; } }
+  #backtest #time-manager > * {
+    display: inline-block;
+    width: 15%; }
+  #backtest #time-manager #back {
+    text-align: left;
+    float: left;
+    width: 42%; }
+  #backtest #time-manager #front {
+    text-align: right;
+    float: right;
+    width: 42%; }
+  #backtest #time-manager #current-time {
+    margin-top: 1em; }
+  #backtest #time-manager .tertiary:hover {
+    background-color: #EF9090 !important;
+    color: #FFFFFF !important; }
+  #backtest #time-manager .secondary:hover {
+    background-color: #1f01b9 !important;
+    color: #FFFFFF !important; }
+
+#backtest #expiries {
+  min-height: 4em; }
+  #backtest #expiries div {
+    display: inline-block; }
+  #backtest #expiries button {
+    margin-right: 1em;
+    padding-right: 1em;
+    padding-left: 1em; }
+
+#backtest #option-chain {
+  margin-top: 1em;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 1em; }
+  #backtest #option-chain #oc-head {
+    width: 100%;
+    height: 5em; }
+    #backtest #option-chain #oc-head #strikes-header {
+      padding-top: 1em;
+      font-weight: 500;
+      float: left; }
+    #backtest #option-chain #oc-head #strikes-choice {
+      float: right; }
+      #backtest #option-chain #oc-head #strikes-choice button, #backtest #option-chain #oc-head #strikes-choice p {
+        display: inline-block; }
+  #backtest #option-chain #oc-call-put {
+    width: 100%;
+    position: relative; }
+    #backtest #option-chain #oc-call-put p {
+      width: 49%;
+      font-weight: 700; }
+    #backtest #option-chain #oc-call-put p:first-child {
+      float: left; }
+    #backtest #option-chain #oc-call-put p:last-child {
+      float: right; }
+  #backtest #option-chain .tertiary:hover {
+    background-color: #E33033 !important;
+    color: #FFFFFF !important; }
+  #backtest #option-chain .success:hover {
+    background-color: #34C697 !important;
+    color: #FFFFFF !important; }
+  #backtest #option-chain .table table {
+    border-collapse: collapse;
+    padding: 5em;
+    margin: 0 auto; }
+    #backtest #option-chain .table table .dark-row {
+      border: 1px solid #1B1D27;
+      background-color: #F8F8FA; }
+    #backtest #option-chain .table table input {
+      max-width: 1em;
+      padding: 0.30em;
+      padding-right: 0em; }
+    #backtest #option-chain .table table td {
+      max-height: 15px; }
+  #backtest #option-chain .table tbody {
+    display: block;
+    height: 750px;
+    overflow: auto; }
+  #backtest #option-chain .table thead, #backtest #option-chain .table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    /* even columns width , fix width of table too*/
+    min-height: 3em; }
+  #backtest #option-chain .table thead {
+    width: calc( 100% - 1em);
+    /* scrollbar is average 1em/16px width, remove it from thead width */ }
+  #backtest #option-chain .table table {
+    width: 100%; }
+  #backtest #option-chain .table tbody tr {
+    background-color: #FFFFFF;
+    border: 0.5px solid #f3f3f3; }
+  @media only screen and (min-width: 1025px) {
+    #backtest #option-chain .table thead tr td:first-child, #backtest #option-chain .table thead tr th:first-child, #backtest #option-chain .table tbody tr td:first-child, #backtest #option-chain .table tbody tr th:first-child {
+      width: 15em; }
+    #backtest #option-chain .table thead tr td:last-child, #backtest #option-chain .table thead tr th:last-child, #backtest #option-chain .table tbody tr td:last-child, #backtest #option-chain .table tbody tr th:last-child {
+      width: 15em; } }
+  #backtest #option-chain .table span {
+    display: inline-block; }
+
+.margin {
+  margin-bottom: 10em;
+  width: 100%; }
+
+.pay {
+  display: block;
+  position: absolute;
+  top: 38vh;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  width: 300px; }
+  .pay p, .pay h4 {
+    margin-bottom: 1em;
+    font-size: 24px; }
+  .pay div, .pay span {
+    color: #FFFFFF !important; }
+
+.warning-cell {
+  background-color: #f443361f;
+  border-radius: 0; }
+
+#expiry-message {
+  display: block;
+  position: absolute;
+  top: 30vh;
+  left: 50%;
+  transform: translate(-50%, 0%); }
+
+.very-bold {
+  font-weight: 700; }
+
+#login {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%); }
+  @media only screen and (min-width: 1025px) {
+    #login {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 15vmin;
+      align-items: flex-end; } }
+  #login .logo {
+    width: 18em;
+    margin: auto; }
+  #login #form {
+    width: 20em;
+    margin: 0 auto;
+    margin-top: 1em;
+    font-size: 1em;
+    padding: 0.5em; }
+    #login #form input[type=number] {
+      -moz-appearance: textfield; }
+    #login #form input[type=number]::-webkit-inner-spin-button,
+    #login #form input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none; }
+    #login #form input, #login #form button {
+      /* the following ensures they're all using the same box-model for rendering */
+      -moz-box-sizing: content-box;
+      /* or `border-box` */
+      -webkit-box-sizing: content-box;
+      -ms-box-sizing: content-box;
+      box-sizing: content-box;
+      width: 92%; }
+    #login #form #trail {
+      text-align: center;
+      padding: 1em 0 2em 0; }
+      @media only screen and (min-width: 1025px) {
+        #login #form #trail {
+          padding: 1em 0 0 0; } }
+  #login #demo {
+    margin: 0 auto;
+    margin-top: 1em; }
+    @media only screen and (min-width: 1025px) {
+      #login #demo {
+        margin-top: 2em;
+        border-left: 0.5px #eee solid;
+        padding-left: 15vmin; } }
+    #login #demo div {
+      width: var(--v-size);
+      height: calc(0.5625 * var(--v-size)); }
+      #login #demo div iframe {
+        width: 100%;
+        height: 100%; }
+    #login #demo h4 {
+      margin-top: 0.5em;
+      text-align: center; }
+
+.blur {
+  -webkit-filter: blur(3px);
+  -moz-filter: blur(3px);
+  -o-filter: blur(3px);
+  -ms-filter: blur(3px);
+  filter: blur(3px);
+  background-color: #fff; }
+
+.hover-element {
+  display: none; }
+
+.hover-show:hover .hover-element {
+  display: block; }
+
+.hover-show:hover .blur-element {
+  display: none; }
+
+.loader {
+  z-index: 100;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); }
+  .loader div {
+    width: 23em; }
+    .loader div img {
+      width: 100%; }
+
+/* MCDATEPICKER */
+.mc-table__weekday {
+  color: #1B1D27 !important; }
+
+.mc-date--active.mc-date--picked {
+  background-color: #1B1D27 !important; }
+
+.mc-btn--success {
+  color: #1B1D27 !important; }
+
+.mc-btn--danger {
+  color: #EF9090 !important; }
+
+#mc-btn__ok {
+  font-weight: 900; }
+
+/* MCDATEPICKER */
+
+tr,td,th,thead,tbody{
+  padding: 10px; }
+
+  .big{
+      font-size:2em;
+  }
+  .heading{
+      font-size:1.5em;
+      font-weight:200;
+  }
+  #bot{
+    margin-bottom: 8em;
+  }
+  #position-details{
+    display: flex;
+    margin-top:0em
+
+  }
+  #position,#history{
+    margin-right:2em;
+  }
+  .toBeTraded{
+    background-color:#eb5600;
+    color:#fff;
+  }
+  td{
+    max-width:10em;
+    word-wrap: break-word;
+  }
+    </style>
+  </head>
+  <body>
+
+
+
+
+
+      <div id="app" class="body"  style="display:none">
+        <div :class="loader===true?'blur':''"  id="backtest">
+
+            <div id="header">
+                <div class="logo"><img src="https://paisashare.in/images/logo.png" alt=""></div>
+            </div> 
+            <h1>Brokers</h1>
+            <br/>
+            <p v-if="data.kiteLogin">Kite Logged in</p>
+            <p v-if="data.fpLogin">5paisa Logged in</p>
+
+
+            <div v-if="orders.length>0">
+                <br/>
+                <br/>
+                <h1>Orders</h1>
+                <br/>
+                <div class="table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Strategy</th>
+                                <th>Script</th>
+                                <th>Leg</th>
+                                <th>Time</th>
+                                <th>Txn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(order,index) of orders" :key="index">
+                                <td>
+                                    {{order.strategyId}}
+                                </td>
+                                <td>
+                                    {{order.script}}
+                                </td>
+                                <td>
+                                    {{order.strike}} {{order.optionType}} {{order.expiry}}
+                                </td>
+                                <td>
+                                    {{order.time}}
+                                </td>
+                                <td>
+                                    {{order.type}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div v-if="fpResponses.length>0">
+                <br/>
+                <br/>
+                <h1>5Paisa Orders</h1>
+                <br/>
+                <div class="table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Strategy</th>
+                                <th>Script Code</th>
+                                <th>Message</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(order,index) of fpResponses" :key="index">
+                                <td>
+                                    {{order.strategyId}}
+                                </td>
+                                <td>
+                                    {{order.ScripCode}}
+                                </td>
+                                <td>
+                                    {{order.Message}}
+                                </td>
+                                <td>
+                                    {{order.time}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div v-if="kiteResponses.length>0">
+                <br/>
+                <br/>
+                <h1>Kite Orders</h1>
+                <br/>
+                <div class="table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Strategy</th>
+                                <th>OrderId</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(order,index) of kiteResponses" :key="index">
+                                <td>
+                                    {{order.strategyId}}
+                                </td>
+                                <td>
+                                    {{order.orderId}}
+                                </td>
+                                <td>
+                                    {{order.time}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+
+        </div>
+        <div v-if="loader" class="loader">
+            <div>
+                <img src="https://paisashare.in/images/loader.gif" alt="">
+            </div>
+        </div>
+        <div id="footer">
+            <div class="footer-elements">
+                <p>Trade with Souvik</p>
+    
+            </div>
+            <div class="footer-elements">
+
+                <a href="https://youtube.com/user/Souvik131?sub_confirmation=1" target="_blank"> <p>Subscribe and Learn on Youtube </p> <div><img src="https://paisashare.in/images/youtube.png" alt=""></div> </a>
+            </div>
+            <div  class="footer-elements">
+              <a href="https://t.me/TradeWithSouvikNow" target="_blank">
+                 <p>Join on Telegram </p> <div><img src="./images/telegram.png" alt=""></div></a>
+  
+          </div>
+
+        </div>
+    </div>
+       
+
+
+        
+  </body>
+
+
+
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script> 
+  <script src="https://paisashare.in/niftybot/socket.io/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+  <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
+  
+ 
+    <script defer>
+
+        var socket = io(window.location.origin);
+        var app = new Vue({
+            el: '#app',
+            data: {
+                data:{},
+                orders:[],
+                kiteResponses:[],
+                fpResponses:[],
+                loader:false
+            },
+            methods: {
+                init:function(){
+                    socket.on("data",(data)=>{
+                        this.data=data.data
+                        this.orders=[]
+                        this.data.orderTimeline.forEach(el=>{
+                            el.requestOrders.forEach(order=>{
+                                order.timestamp=el.timestamp
+                                order.strategyId=el.strategyId
+                                order.expiry=el.expiry
+                                this.orders.push(order)
+                            })
+                        })
+                        this.orders=this.orders.reverse()
+
+                        this.kiteResponses=[]
+                        this.data.kiteResponses.forEach(el=>{
+                            el.responses.forEach(order=>{
+                                order={orderId:order.response.order_id}
+                                order.time=el.timestamp
+                                order.strategyId=el.strategyId
+                                this.kiteResponses.push(order)
+                            })
+                        })
+                        this.kiteResponses=this.kiteResponses.reverse()
+
+                        this.fpResponses=[]
+                        this.data.fpResponses.forEach(el=>{
+                            el.responses.forEach(order=>{
+                                order.time=el.timestamp
+                                order.strategyId=el.strategyId
+                                this.fpResponses.push(order)
+                            })
+                        })
+                        this.fpResponses=this.fpResponses.reverse()
+
+                    })
+                    
+                   
+                }
+            },
+            watch:{
+              data: {
+                    handler: function (val) {
+                       localStorage.setItem("data",val)
+                    },
+                    deep: true
+                }
+            },
+            mounted(){
+
+                document.getElementById("app").style.display="block";
+                this.init()
+            }
+        })
+
+      
+    </script>
+</html>
