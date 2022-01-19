@@ -3,12 +3,12 @@ const kite = require("./app.js")
 const strategyConfig = require("../../strategy.json")
 const persist = require("../../storage/persist")
 let isFailing=false;
-let data
+let storedData
 module.exports={
     order:(strategyId,requests,bot)=>{
         return new Promise(async (resolve,reject)=>{
             try{
-                data=await persist.get()
+                
                 const kiteOps = kite.getOperations()
                 if(isFailing){
                     reject("Orders have failed previously hence the no order is being placed. Please fix the issue and restart the app.")
@@ -50,10 +50,10 @@ module.exports={
                         if(isComplete&&requestedOrderIds.length>0&&postbackOrders.length>0){
                             bot.sendMessage(`All Kite orders were successful`)
                             kite.subscribe(console.log)
-
-                            data.kiteUpdates=data.kiteUpdates||[]
-                            data.kiteUpdates.push({timstamp:formatDateTime(new Date()),message:"All orders successful",strategyId})
-                            await persist.set(data)
+                            storedData=await persist.get()
+                            storedData.kiteUpdates=storedData.kiteUpdates||[]
+                            storedData.kiteUpdates.push({timstamp:formatDateTime(new Date()),message:"All orders successful",strategyId})
+                            await persist.set(storedData)
                                     
                         }
                         
@@ -113,9 +113,10 @@ async function requestOrdersAsync(strategyId,request){
                     completedOrders.push({response})
                     if(request.orders.length===completedOrders.length){
                         resolve(completedOrders)
-                        data.kiteResponses=data.kiteResponses||[]
-                        data.kiteResponses.push({timstamp:formatDateTime(new Date()),responses:completedOrders,strategyId})
-                        await persist.set(data)
+                        storedData=await persist.get()
+                        storedData.kiteResponses=storedData.kiteResponses||[]
+                        storedData.kiteResponses.push({timstamp:formatDateTime(new Date()),responses:completedOrders,strategyId})
+                        await persist.set(storedData)
                     }
                 })
                 .catch((e)=>{

@@ -10,14 +10,13 @@ const io = require("socket.io-client")
 const socket = io("wss://paisashare.in", {path: '/user-auth/socket.io/'});
 const persist = require("./storage/persist")
 const strategyConfig = require("./strategy.json")
-let data={}
+let storedData={}
 
 socket.on("connect",run);
 
 
 async function run () {
     console.log("Connected to Server")
-    data = await persist.get()
 
     try{
         await kite.init();
@@ -48,8 +47,10 @@ async function run () {
         })).json()
         
         if(status=="success"){
-            data["kite"]={user:data,requestToken}
-            await persist.set(data)
+
+            storedData = await persist.get()
+            storedData["kite"]={user:data,requestToken}
+            await persist.set(storedData)
             try{
                 await kite.init();
                 console.log("Kite Login Complete")
@@ -64,8 +65,10 @@ async function run () {
     })
 
     socket.on("kite-login-user",async request=>{
-        data["kite"]=request
-        await persist.set(data)
+
+        storedData = await persist.get()
+        storedData["kite"]=request
+        await persist.set(storedData)
         try{
             await kite.init();
             console.log("Kite Login data received")
@@ -83,15 +86,16 @@ async function run () {
         console.log("Order for ",strategyId)
         if(strategyConfig[strategyId]){
             console.log("Trading orders",strategyId,expiry,requestOrders)
-            data = await persist.get()
-            data.orderTimeline=data.orderTimeline||[]
-            data.orderTimeline.push({timstamp:formatDateTime(new Date()),requestOrders,strategyId,expiry})
-            await persist.set(data)
+            storedData = await persist.get()
+            storedData.orderTimeline=storedData.orderTimeline||[]
+            storedData.orderTimeline.push({timstamp:formatDateTime(new Date()),requestOrders,strategyId,expiry})
+            await persist.set(storedData)
             await broker.order(strategyId,requestOrders,{sendMessage:async(error)=>{
                 console.log(strategyId,error)
-                data.errors=data.errors||[]
-                data.errors.push({timstamp:formatDateTime(new Date()),error,strategyId,expiry})
-                await persist.set(data)
+                storedData = await persist.get()
+                storedData.errors=storedData.errors||[]
+                storedData.errors.push({timstamp:formatDateTime(new Date()),error,strategyId,expiry})
+                await persist.set(storedData)
             }},expiry)
         }
     })

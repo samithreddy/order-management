@@ -21,7 +21,7 @@ var client = new FivePaisaClient(conf)
 
 
 let loginCred 
-
+let storedData
 
 
 
@@ -85,9 +85,10 @@ async function placeOrder(strategyId,orders,expiry){
             responses.push(resp)
             i++;
         }
-        data.fpResponses=data.fpResponses||[]
-        data.fpResponses.push({timstamp:formatDateTime(new Date()),responses,strategyId})
-        await persist.set(data)
+        storedData=await persist.get()
+        storedData.fpResponses=storedData.fpResponses||[]
+        storedData.fpResponses.push({timstamp:formatDateTime(new Date()),responses,strategyId})
+        await persist.set(storedData)
     }
     return responses
     
