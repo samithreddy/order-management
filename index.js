@@ -47,7 +47,7 @@ ioServer.on('connection',async (socket) => {
     socket.on('disconnect', () => {
         delete sockets[socket.id]
     });
-    socket.emit("data",{data:await persist.get()})
+    socket.emit("data",{data:await persist.get(),kiteKey:process.env.KITE_API_KEY})
 });
 
 
@@ -56,7 +56,7 @@ ioServer.on('connection',async (socket) => {
 server.listen(process.env.PORT, () => {
     orderClient.init(()=>{
         Object.values(sockets).forEach(async socket=>{
-            socket.emit("data",{data:await persist.get()})
+            socket.emit("data",{data:await persist.get(),kiteKey:process.env.KITE_API_KEY})
         })
     })
     console.log('listening on *:'+process.env.PORT);

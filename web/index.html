@@ -614,6 +614,10 @@ tr,td,th,thead,tbody{
     max-width:10em;
     word-wrap: break-word;
   }
+  #kite{
+    background-color: #d65707;
+    color:#fff;
+  }
     </style>
   </head>
   <body>
@@ -630,7 +634,8 @@ tr,td,th,thead,tbody{
             </div> 
             <h1>Brokers</h1>
             <br/>
-            <p v-if="data.kiteLogin">Kite Logged in</p>
+            <p v-if="data.kiteLogin">Kite Logged in</p> 
+            <button v-if="!data.kiteLogin" id="kite" v-on:click="redirectToKiteLogin">Kite Login</button>
             <p v-if="data.fpLogin">5paisa Logged in</p>
 
 
@@ -795,12 +800,14 @@ tr,td,th,thead,tbody{
                 orders:[],
                 kiteResponses:[],
                 fpResponses:[],
-                loader:false
+                loader:false,
+                kiteKey:""
             },
             methods: {
                 init:function(){
                     socket.on("data",(data)=>{
                         this.data=data.data
+                        this.kiteKey=data.kiteKey
                         this.orders=[]
                         this.data.orderTimeline.forEach(el=>{
                             el.requestOrders.forEach(order=>{
@@ -836,6 +843,10 @@ tr,td,th,thead,tbody{
                     })
                     
                    
+                },
+                redirectToKiteLogin:function(){
+                  console.log(this.kiteKey)
+                  window.open(`https://kite.trade/connect/login?api_key=${this.kiteKey}&v=3`, "_blank");
                 }
             },
             watch:{
