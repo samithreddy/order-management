@@ -630,9 +630,12 @@ tr,td,th,thead,tbody{
         <div :class="loader===true?'blur':''"  id="backtest">
 
             <div id="header">
-                <div class="logo"><img src="https://paisashare.in/images/logo.png" alt=""></div>
+                <div class="logo"><img src="https://paisashare.in/images/logo.png" alt=""> </div>
             </div> 
-            <h1>Brokers</h1>
+            <h1>Trade Terminal</h1>
+            <br/>
+            <br/>
+            <h2>Brokers</h2>
             <br/>
             <p v-if="data.kiteLogin">Kite Logged in</p> 
             <button v-if="!data.kiteLogin" id="kite" v-on:click="redirectToKiteLogin">Kite Login</button>
@@ -642,7 +645,7 @@ tr,td,th,thead,tbody{
             <div v-if="orders.length>0">
                 <br/>
                 <br/>
-                <h1>Orders</h1>
+                <h2>Orders</h2>
                 <br/>
                 <div class="table">
                     <table>
@@ -681,7 +684,7 @@ tr,td,th,thead,tbody{
             <div v-if="fpResponses.length>0">
                 <br/>
                 <br/>
-                <h1>5Paisa Orders</h1>
+                <h2>5Paisa Orders</h2>
                 <br/>
                 <div class="table">
                     <table>
@@ -716,7 +719,7 @@ tr,td,th,thead,tbody{
             <div v-if="kiteResponses.length>0">
                 <br/>
                 <br/>
-                <h1>Kite Orders</h1>
+                <h2>Kite Orders</h2>
                 <br/>
                 <div class="table">
                     <table>
